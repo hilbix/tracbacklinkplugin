@@ -193,10 +193,9 @@ class TracBackLinkSystem(Component):
         self._invoke('attachment_deleted', self._attachment_deleted,
                      attachment)
 
-    def attachment_reparented(self, attachment, old_parent_realm,
-                              old_parent_id):
-        self._invoke('attachment_reparented', self._attachment_reparented,
-                     attachment, old_parent_realm, old_parent_id)
+    def attachment_moved(self, attachment, old_parent_realm, old_parent_id, old_filename):
+        self._invoke('attachment_moved', self._attachment_moved,
+                     attachment, old_parent_realm, old_parent_id, old_filename)
 
     # IWikiChangeListener methods
 
@@ -298,8 +297,7 @@ class TracBackLinkSystem(Component):
         self._resource_deleted('attachment', attachment.filename,
                                attachment.parent_realm, attachment.parent_id)
 
-    def _attachment_reparented(self, attachment, old_parent_realm,
-                               old_parent_id):
+    def _attachment_moved(self, attachment, old_parent_realm, old_parent_id, old_filename):
         with self.env.db_transaction:
             self._resource_deleted('attachment', None, old_parent_realm,
                                    old_parent_id)
