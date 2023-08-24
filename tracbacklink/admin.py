@@ -22,6 +22,12 @@ from trac.wiki.model import WikiPage
 from tracbacklink.api import (TracBackLinkChangeset as Changeset,
                               TracBackLinkSystem)
 
+if hasattr(dict, 'iteritems'):
+    _iteritems = lambda value: value.iteritems()
+    _itervalues = lambda value: value.itervalues()
+else:
+    _iteritems = lambda value: value.items()
+    _itervalues = lambda value: value.values()
 
 class TracBackLinkCommandProvider(Component):
 
@@ -68,7 +74,7 @@ class TracBackLinkCommandProvider(Component):
             else:
                 db("DELETE FROM backlink")
                 db.update_sequence(None, 'backlink', 'id')
-            for (source, ref), (date, author) in links.iteritems():
+            for (source, ref), (date, author) in _iteritems(links):
                 mod.add_backlink(date, author, source, ref)
 
     def _gather_links(self, realm, args):
